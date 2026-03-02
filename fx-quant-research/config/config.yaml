@@ -1,0 +1,122 @@
+# FX Quantitative Research Framework Configuration
+
+# ==========================================
+# Data Configuration
+# ==========================================
+data:
+  raw_path: "data/raw/"
+  processed_path: "data/processed/"
+  timezone: "UTC"
+  frequency: "D" # D = daily, H = hourly
+
+# ==========================================
+# Validation Configuration
+# ==========================================
+validation:
+  spike_threshold: 5.0 # Z-score threshold for spike detection
+  max_missing_pct: 5.0 # Maximum allowed missing data percentage
+  check_weekends: true # Flag weekend gaps as missing data
+  min_bars_required: 100 # Minimum bars for analysis
+
+# ==========================================
+# Transaction Cost Configuration
+# ==========================================
+costs:
+  # Spread costs by FX pair tier (in basis points)
+  spread_bps:
+    majors: 1.5 # EURUSD, USDJPY, GBPUSD, USDCHF
+    minors: 3.0 # EURGBP, EURJPY, AUDUSD, NZDUSD
+    exotics: 10.0 # USDTRY, USDZAR, USDBRL
+
+  # Slippage model parameters
+  slippage_coefficient: 0.1
+
+  # Market impact model parameters
+  market_impact_exponent: 0.5 # Power law exponent (0.5 = square root)
+  market_impact_coefficient: 0.05
+
+  # Swap/rollover costs
+  enable_swap_costs: false # Set to true if swap_rates CSV provided
+  swap_rates_path: "data/swap_rates/"
+
+# ==========================================
+# Backtest Configuration
+# ==========================================
+backtest:
+  random_seed: 42
+  execution_lag: 1 # Bars between signal and execution
+  initial_capital: 100000.0
+  annualization_factor: 252 # 252 trading days per year
+
+# ==========================================
+# Regime Detection Configuration
+# ==========================================
+regime:
+  n_states: 3 # Number of hidden states (low/med/high vol)
+  covariance_type: "full" # 'full', 'diag', 'tied', 'spherical'
+  max_iter: 100 # Maximum EM iterations
+  tol: 1e-2 # Convergence tolerance
+  features:
+    - "returns"
+    - "volatility"
+    - "volume_zscore"
+
+# ==========================================
+# Risk Management Configuration
+# ==========================================
+risk:
+  max_drawdown_threshold: -0.15 # Maximum allowed drawdown (-15%)
+  correlation_threshold: 0.7 # Correlation warning threshold
+  var_confidence: 0.95 # Value-at-Risk confidence level
+  var_window: 252 # Rolling window for VaR calculation
+
+# ==========================================
+# Feature Engineering Configuration
+# ==========================================
+features:
+  momentum_windows: [5, 10, 20, 50]
+  volatility_windows: [10, 20, 60]
+  rsi_period: 14
+  zscore_window: 20
+  range_windows: [10, 20, 50] # For range expansion features
+  consecutive_windows: [2, 3] # For consecutive direction detection
+
+# ==========================================
+# Exhaustion-Failure-to-Continue Strategy
+# ==========================================
+exhaustion_strategy:
+  # Part 1: Exhaustion Detection
+  range_expansion_threshold: 0.8 # Range > 0.8× median (unbounded)
+  median_range_window: 20 # Window for median range calculation
+  extreme_zone_upper: 0.65 # Top 35% threshold (close position)
+  extreme_zone_lower: 0.35 # Bottom 35% threshold
+  consecutive_bars_required: 2 # Minimum consecutive directional bars
+
+  # Part 2: Failure-to-Continue Filter
+  enable_failure_filter: true # Reduces ~158 → 40 signals
+
+  # Part 3: Position Sizing & Exits
+  risk_per_trade: 0.01 # 1% capital risk
+  stop_loss_pips: 10
+  profit_target_pips: 10
+  profit_target_extended_pips: 15
+  trailing_stop_trigger_pips: 4
+  trailing_stop_distance_pips: 3
+  max_hold_bars: 5
+
+  # Optional: Regime Filter
+  enable_regime_filter: false # Deploy without initially
+  target_regime_state: 1 # Medium volatility (if enabled)
+
+# ==========================================
+# FX Pairs Configuration Reference
+# ==========================================
+fx_pairs_config: "config/fx_pairs.yaml"
+
+# ==========================================
+# Logging Configuration
+# ==========================================
+logging:
+  experiment_log_path: "logs/experiment_log.json"
+  state_transition_log: "logs/state_transitions.log"
+  level: "INFO"

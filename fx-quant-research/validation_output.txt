@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/ghost/Workspace/Projects/Exhaustion-failure-to-continue-hypothesis/fx-quant-research/scripts/validate_cross_pairs.py", line 24, in <module>
+    from src.features.library import FeatureEngineering
+  File "/home/ghost/Workspace/Projects/Exhaustion-failure-to-continue-hypothesis/fx-quant-research/src/features/library.py", line 13, in <module>
+    from statsmodels.tsa.stattools import adfuller, kpss
+ModuleNotFoundError: No module named 'statsmodels'

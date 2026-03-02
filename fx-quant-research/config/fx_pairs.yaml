@@ -1,0 +1,148 @@
+# FX Pair-Specific Configuration
+# Defines pip sizes, pip values, tiers, and spreads for each currency pair
+
+# ==========================================
+# Major Pairs (Highest Liquidity)
+# ==========================================
+pairs:
+  EURUSD:
+    pip_size: 0.0001
+    pip_value: 10.00 # USD per pip for standard lot (100,000 units)
+    tier: major
+    spread_bps: 1.5
+    description: "Euro / US Dollar"
+
+  GBPUSD:
+    pip_size: 0.0001
+    pip_value: 10.00
+    tier: major
+    spread_bps: 1.5
+    description: "British Pound / US Dollar"
+
+  USDJPY:
+    pip_size: 0.01
+    pip_value: 9.17 # Approximate USD value (varies with JPY rate)
+    tier: major
+    spread_bps: 1.5
+    description: "US Dollar / Japanese Yen"
+
+  USDCHF:
+    pip_size: 0.0001
+    pip_value: 10.00
+    tier: major
+    spread_bps: 1.8
+    description: "US Dollar / Swiss Franc"
+
+  # ==========================================
+  # Minor Pairs (Medium Liquidity)
+  # ==========================================
+  NZDJPY:
+    pip_size: 0.01
+    pip_value: 9.17
+    tier: minor
+    spread_bps: 3.0
+    description: "New Zealand Dollar / Japanese Yen"
+
+  NZDUSD:
+    pip_size: 0.0001
+    pip_value: 10.00
+    tier: minor
+    spread_bps: 2.5
+    description: "New Zealand Dollar / US Dollar"
+
+  AUDNZD:
+    pip_size: 0.0001
+    pip_value: 6.50 # NZD value (cross pair)
+    tier: minor
+    spread_bps: 3.5
+    description: "Australian Dollar / New Zealand Dollar"
+
+  GBPCAD:
+    pip_size: 0.0001
+    pip_value: 7.25 # CAD value (cross pair)
+    tier: minor
+    spread_bps: 4.0
+    description: "British Pound / Canadian Dollar"
+
+  USDCAD:
+    pip_size: 0.0001
+    pip_value: 7.50
+    tier: minor
+    spread_bps: 2.0
+    description: "US Dollar / Canadian Dollar"
+
+  EURCHF:
+    pip_size: 0.0001
+    pip_value: 10.00
+    tier: minor
+    spread_bps: 2.5
+    description: "Euro / Swiss Franc"
+
+# ==========================================
+# Exotic Pairs (Lower Liquidity)
+# ==========================================
+# Add exotic pairs as needed
+# USDTRY:
+#   pip_size: 0.0001
+#   pip_value: 10.00
+#   tier: exotic
+#   spread_bps: 10.0
+#   description: "US Dollar / Turkish Lira"
+
+# ==========================================
+# Helper Functions Map
+# ==========================================
+tier_defaults:
+  major:
+    spread_bps: 1.5
+    min_position_size: 0.01 # Micro lot
+    max_leverage: 30
+
+  minor:
+    spread_bps: 3.0
+    min_position_size: 0.01
+    max_leverage: 20
+
+  exotic:
+    spread_bps: 10.0
+    min_position_size: 0.01
+    max_leverage: 10
+
+# ==========================================
+# Position Sizing Parameters
+# ==========================================
+position_sizing:
+  default_risk_per_trade: 0.01 # 1% of capital
+  max_position_size_pct: 0.10 # 10% of capital per position
+  min_capital: 1000.0 # Minimum account size
+
+# ==========================================
+# Risk Management Parameters
+# ==========================================
+risk_management:
+  stop_loss_pips: 10
+  profit_target_pips: 10 # Initial target
+  profit_target_extended_pips: 15 # Extended target
+  trailing_stop_trigger_pips: 4
+  trailing_stop_distance_pips: 3
+  max_hold_bars: 5
+
+# ==========================================
+# Notes
+# ==========================================
+# Pip Size:
+#   - JPY pairs: 0.01 (2 decimal places)
+#   - Most others: 0.0001 (4 decimal places)
+#   - Some exotics: 0.00001 (5 decimal places)
+#
+# Pip Value:
+#   - For USD base pairs: pip_value in USD
+#   - For cross pairs: pip_value in counter currency
+#   - Standard lot = 100,000 units
+#   - Mini lot = 10,000 units (divide pip_value by 10)
+#   - Micro lot = 1,000 units (divide pip_value by 100)
+#
+# Spread BPS:
+#   - 1.5 bps = 0.015% = $15 per $100k notional (round-trip)
+#   - Includes bid-ask spread cost
+#   - Does NOT include slippage or market impact (modeled separately)
