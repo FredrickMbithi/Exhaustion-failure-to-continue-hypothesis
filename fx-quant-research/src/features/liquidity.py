@@ -183,3 +183,80 @@ def calculate_market_depth_proxy(
     )
     
     return depth_proxy
+
+
+def session_liquidity_filter(
+    index: pd.DatetimeIndex,
+    block_windows: list = [(21, 23)],  # UTC hours to avoid (NY close / roll)
+    timezone: str = "UTC"
+) -> pd.Series:
+    """
+    Flag timestamps that fall inside illiquid windows so trades can be blocked.
+
+    Args:
+        index: DatetimeIndex for price/feature data
+        block_windows: List of (start_hour, end_hour) tuples in 24h UTC
+        timezone: Timezone of the index (converted to UTC for checking)
+
+    Returns:
+        Boolean Series aligned to index where True means "trade allowed"
+
+    Examples:
+        >>> mask = session_liquidity_filter(df.index, [(21, 23), (0, 1)])
+        >>> df_filtered = df[mask]  # Drop illiquid bars
+    """
+    if index.tz is None:
+        idx_utc = index.tz_localize(timezone).tz_convert("UTC")
+    else:
+        idx_utc = index.tz_convert("UTC")
+
+    hours = idx_utc.hour
+    allow = pd.Series(True, index=index)
+
+    for start, end in block_windows:
+        if start <= end:
+            mask = (hours >= start) & (hours < end)
+        else:
+            # window wraps midnight
+            mask = (hours >= start) | (hours < end)
+        allow.loc[mask] = False
+
+    return allow
+
+
+def session_liquidity_score(
+    index: pd.DatetimeIndex,
+    timezone: str = "UTC"
+) -> pd.Series:
+    """
+    Score liquidity by trading session (rough heuristic).
+
+    Scores:
+    - London/NY overlap (12-16 UTC): 1.0
+    - London only (8-12 UTC): 0.8
+    - NY only (16-20 UTC): 0.7
+    - Asia (0-7 UTC): 0.4
+    - Rollover / illiquid (21-23 UTC): 0.1
+
+    Args:
+        index: DatetimeIndex for data
+        timezone: Timezone of index
+
+    Returns:
+        Series of liquidity scores in [0, 1]
+    """
+    if index.tz is None:
+        idx_utc = index.tz_localize(timezone).tz_convert("UTC")
+    else:
+        idx_utc = index.tz_convert("UTC")
+
+    hours = idx_utc.hour
+    scores = pd.Series(0.5, index=index)  # default mid liquidity
+
+    scores.loc[(hours >= 12) & (hours < 16)] = 1.0    # London/NY overlap
+    scores.loc[(hours >= 8) & (hours < 12)] = 0.8     # London
+    scores.loc[(hours >= 16) & (hours < 20)] = 0.7    # NY
+    scores.loc[(hours >= 0) & (hours < 8)] = 0.4      # Asia
+    scores.loc[(hours >= 21) & (hours < 24)] = 0.1    # Rollover / illiquid
+
+    return scores

@@ -421,7 +421,7 @@ class FeatureEngineering:
                 df['high'].shift(1).rolling(window=window, min_periods=1).max()
             )
             df[f'range_low_{window}'] = (
-                df['low'].shift(1).rolling(window=window, min_periods=1).max()
+                df['low'].shift(1).rolling(window=window, min_periods=1).min()
             )
             
             # Breakout detection

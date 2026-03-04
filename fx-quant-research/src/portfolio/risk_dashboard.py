@@ -359,3 +359,62 @@ def portfolio_diversification_ratio(
         div_ratio = 1.0
     
     return float(div_ratio)
+
+
+def plot_correlation_heatmap(
+    returns_df: pd.DataFrame,
+    title: str = "Correlation Heatmap",
+    figsize: tuple = (8, 6)
+):
+    """
+    Plot correlation heatmap for a set of return series.
+
+    Args:
+        returns_df: DataFrame of returns (columns = assets)
+        title: Plot title
+        figsize: Figure size
+
+    Returns:
+        Matplotlib Axes for further customization.
+    """
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    corr = returns_df.corr()
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.heatmap(corr, annot=True, cmap="RdBu_r", center=0, ax=ax)
+    ax.set_title(title)
+    plt.tight_layout()
+    return ax
+
+
+def plot_currency_exposure_heatmap(
+    positions: Dict[str, float],
+    title: str = "Net Currency Exposure",
+    figsize: tuple = (6, 4)
+):
+    """
+    Visualize net currency exposure as a heatmap.
+
+    Args:
+        positions: Dict of pair->notional
+        title: Plot title
+        figsize: Figure size
+    """
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+
+    exposure = PortfolioRiskDashboard().net_exposure_by_currency(positions)
+    exposure_series = pd.Series(exposure).sort_values(ascending=False)
+
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.heatmap(
+        exposure_series.to_frame("exposure").T,
+        annot=True,
+        cmap="YlGnBu",
+        fmt=".0f",
+        ax=ax
+    )
+    ax.set_title(title)
+    plt.tight_layout()
+    return ax
