@@ -2,7 +2,7 @@
 
 A production-grade FX quantitative trading research project implementing and validating a counter-trend mean-reversion strategy based on price exhaustion and failure patterns.
 
-## 🎯 Hypothesis
+## Hypothesis
 
 **Core Concept:** After extreme price moves that show exhaustion, when price fails to continue the move (rejection), enter counter-trend for mean reversion.
 
@@ -11,7 +11,7 @@ A production-grade FX quantitative trading research project implementing and val
 2. **Wait for Failure** — Next bar closes back inside prior range (rejection)
 3. **Enter Counter-Trend** — Long after downside exhaustion failure, short after upside exhaustion failure
 
-## 📊 Key Results (Production Parameters)
+## Key Results (Production Parameters)
 
 **Best Pair:** NZDJPY H1
 
@@ -23,7 +23,7 @@ A production-grade FX quantitative trading research project implementing and val
 | Sharpe Ratio | ~28 | (annualized) |
 | Monte Carlo | 85-95% | profitable |
 
-**Status:** ✅ **PRODUCTION READY** with proper risk management
+**Status:** **PRODUCTION READY** with proper risk management
 
 ## 📂 Repository Structure
 
@@ -54,7 +54,7 @@ Exhaustion-failure-to-continue-hypothesis/
 └── README.md                        # This file
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Environment Setup
 
@@ -108,7 +108,7 @@ jupyter notebook notebooks/
 - HMM regime detection (3 states: trending, mean-rev, high-vol)
 - Portfolio risk analytics
 
-**Output:** ✅ Solid, reproducible infrastructure
+**Output:** Solid, reproducible infrastructure
 
 ### Phase 2: Strategy Development (Days 14-21)
 
@@ -122,7 +122,7 @@ jupyter notebook notebooks/
 - 14.5% signal rate ❌ (too high, target <5%)
 - IC = 0.13 (p<0.05) ✓ (statistically significant)
 
-**Output:** ✅ Validated edge, needs optimization
+**Output:** Validated edge, needs optimization
 
 ### Phase 3: Optimization (Days 22-24)
 
@@ -137,7 +137,7 @@ jupyter notebook notebooks/
 - Signal rate: 14.5% → **2.54%**
 - IC: 0.13 → **0.3934**
 
-**Output:** ✅ Production-grade parameters
+**Output:** Production-grade parameters
 
 ### Phase 4: Validation (Days 25-30)
 
@@ -160,9 +160,9 @@ jupyter notebook notebooks/
 - 85-95% probability of positive returns
 - Max drawdown estimates: 8-15% (95% CI)
 
-**Output:** ✅ Ready for live trading
+**Output:** Ready for live trading
 
-## 🔬 Strategy Implementation
+## Strategy Implementation
 
 ### Signal Generation (Python)
 
@@ -218,7 +218,7 @@ protected override void OnBar()
 }
 ```
 
-## 📝 Critical Documents
+## Critical Documents
 
 1. **[COMPLETE_SUMMARY.md](fx-quant-research/COMPLETE_SUMMARY.md)**  
    Full 30-day project narrative with methodology, results, lessons learned
@@ -235,7 +235,7 @@ protected override void OnBar()
 5. **Parameter Optimization Results**  
    See `parameter_optimization_results.csv` (375 rows)
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Python 3.8+** — Core language
 - **Pandas + NumPy** — Data manipulation
@@ -256,7 +256,7 @@ Before going live:
 - [ ] Track IC decay over time (re-optimize if IC < 0.20)
 - [ ] Set up automated monitoring dashboard
 
-## 📊 Performance Attribution
+## Performance Attribution
 
 **Why This Works:**
 
@@ -273,7 +273,7 @@ Before going live:
 - Position sizing critical (use 1-2% risk per trade max)
 - Spread/slippage assumptions must match live conditions
 
-## 📚 Research Reports
+## Research Reports
 
 Located in `fx-quant-research/`:
 
@@ -290,7 +290,7 @@ This is a research repository. To extend:
 3. Run backtests and document results in `notebooks/`
 4. Update parameter grid search if needed
 
-## 📄 License
+## License
 
 MIT License (or specify your license)
 
@@ -300,7 +300,7 @@ For questions: [Your GitHub Profile](https://github.com/FredrickMbithi)
 
 ---
 
-**Status:** ✅ PRODUCTION READY (as of March 2, 2026)  
+**Status:** PRODUCTION READY (as of March 2, 2026)  
 **Primary Pair:** NZDJPY H1  
 **Timeframe:** Hourly bars  
 **Development Duration:** 30 days  
